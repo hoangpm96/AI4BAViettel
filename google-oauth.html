@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>authentication — Đăng nhập/đăng ký qua Google | Wireframe</title>
+  <style>
+    /* RESET */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f4f4f4;
+      color: #000;
+      padding: 32px 24px;
+    }
+    .wf-page { max-width: 1400px; margin: 0 auto; }
+
+    /* BREADCRUMB về cửa-vào TOC */
+    .wf-breadcrumb { max-width: 1400px; margin: 0 auto 16px; }
+    .wf-breadcrumb a { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #000; text-decoration: none; border: 1px solid #000; border-radius: 4px; padding: 6px 12px; background: #fff; }
+    .wf-breadcrumb a:hover { background: #f0f0f0; }
+    html.in-iframe .wf-breadcrumb { display: none; }
+
+    /* HEADER */
+    .wf-header { margin-bottom: 28px; border-bottom: 2px solid #000; padding-bottom: 14px; background: #fff; padding: 16px 20px; }
+    .wf-feature-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #888; }
+    .wf-flow-title { font-size: 22px; font-weight: 700; margin-top: 4px; }
+    .wf-flow-meta { font-size: 12px; color: #888; margin-top: 6px; }
+    .wf-flow-desc { font-size: 13px; color: #444; margin-top: 8px; line-height: 1.5; }
+
+    /* FLOW ROW */
+    .wf-rows { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 20px 16px; }
+    .wf-row-divider { display: none; }
+
+    /* SCREEN WRAPPER */
+    .wf-screen { flex: 0 0 auto; }
+    .wf-page[data-device="mobile"]  .wf-screen { width: 375px; }
+    .wf-page[data-device="tablet"]  .wf-screen { width: 768px; }
+    .wf-page[data-device="desktop"] .wf-screen { width: 1024px; max-width: 100%; }
+    .wf-page:not([data-device]) .wf-screen { width: 375px; }
+    .wf-device-tag { display: inline-block; font-size: 10px; color: #555; border: 1px solid #ccc; border-radius: 3px; padding: 1px 6px; margin-bottom: 6px; }
+    .wf-step-badge {
+      font-size: 10px; font-weight: 700; color: #fff;
+      background: #000; border-radius: 50%;
+      width: 20px; height: 20px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 6px;
+    }
+    .wf-screen-label { text-align: center; font-size: 11px; color: #555; margin-top: 6px; }
+    .wf-shared-badge { font-size: 9px; color: #888; border: 1px solid #ccc; border-radius: 3px; padding: 0 4px; margin-left: 4px; }
+    .wf-arrow { display: flex; align-items: center; padding-top: 48px; font-size: 22px; color: #000; flex-shrink: 0; }
+
+    /* SCREEN FRAME */
+    .wf-screen-frame { border: 2px solid #000; border-radius: 8px; overflow: hidden; background: #fff; }
+    .wf-screen-bar { background: #f0f0f0; border-bottom: 1px solid #000; padding: 6px 10px; display: flex; align-items: center; gap: 5px; }
+    .wf-dot { width: 8px; height: 8px; border-radius: 50%; border: 1px solid #888; background: #fff; flex-shrink: 0; }
+    .wf-bar-title { font-size: 11px; font-weight: 600; flex: 1; text-align: center; }
+    .wf-screen-content { padding: 16px 14px; display: flex; flex-direction: column; gap: 10px; }
+    .wf-form { width: 100%; max-width: 380px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+    .wf-form.card { border: 1px solid #ccc; border-radius: 8px; padding: 20px; background: #fff; }
+
+    /* APP BRAND */
+    .wf-app-brand { text-align: center; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; color: #000; padding-bottom: 4px; border-bottom: 1px solid #f0f0f0; margin-bottom: 4px; }
+    .wf-screen-title { font-size: 15px; font-weight: 700; text-align: center; margin-bottom: 4px; }
+
+    /* FORM ELEMENTS */
+    .field { display: flex; flex-direction: column; gap: 3px; }
+    .field label { font-size: 11px; font-weight: 600; }
+    .field input[type=text], .field input[type=email], .field input[type=password] {
+      border: 1px solid #000; border-radius: 3px; padding: 7px 9px;
+      font-size: 12px; width: 100%; background: #fff; color: #000;
+    }
+    .field input::placeholder { color: #aaa; }
+    .input-pw { position: relative; }
+    .input-pw input { padding-right: 44px; width: 100%; border: 1px solid #000; border-radius: 3px; padding: 7px 9px; font-size: 12px; }
+    .input-pw .eye { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-size: 11px; cursor: pointer; color: #555; }
+
+    /* CHECKBOX */
+    label.checkbox { display: flex; align-items: center; gap: 6px; font-size: 12px; cursor: pointer; }
+    label.checkbox input { width: 14px; height: 14px; flex-shrink: 0; }
+
+    /* BUTTONS */
+    .btn-primary {
+      display: block; width: 100%;
+      padding: 9px 12px; background: #000; color: #fff;
+      border: 2px solid #000; border-radius: 4px;
+      font-size: 13px; font-weight: 600; cursor: pointer; text-align: center;
+    }
+    .btn-secondary {
+      display: block; width: 100%;
+      padding: 9px 12px; background: #fff; color: #000;
+      border: 2px solid #000; border-radius: 4px;
+      font-size: 13px; font-weight: 600; cursor: pointer; text-align: center;
+    }
+    .btn-google {
+      display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
+      padding: 9px 12px; background: #fff; color: #000;
+      border: 2px solid #000; border-radius: 4px;
+      font-size: 13px; font-weight: 600; cursor: pointer;
+    }
+    .g-icon { font-size: 14px; font-weight: 900; font-style: italic; }
+
+    /* LINK */
+    .wf-link { font-size: 12px; color: #000; text-decoration: underline; cursor: pointer; }
+    .links-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 4px; }
+
+    /* BANNERS / INFO */
+    .banner { font-size: 11px; padding: 8px 10px; border: 1px solid #000; border-radius: 4px; display: flex; gap: 6px; align-items: flex-start; line-height: 1.4; }
+    .banner-info { background: #f0f0f0; }
+    .banner-warn { background: #f0f0f0; }
+
+    /* LABELS / HINTS */
+    .info-label { font-size: 12px; color: #333; line-height: 1.5; text-align: center; }
+    .hint-text { font-size: 11px; color: #888; font-style: italic; }
+    .state-hint { font-size: 10px; color: #888; font-style: italic; margin-top: 2px; }
+
+    /* PASSWORD CHECKLIST */
+    .pw-check { display: flex; gap: 8px; flex-wrap: wrap; font-size: 10px; }
+    .pw-check .ok { color: #000; }
+    .pw-check .ok::before { content: "✓ "; }
+    .pw-check .fail { color: #888; }
+    .pw-check .fail::before { content: "✗ "; }
+
+    /* METER (độ mạnh mật khẩu) */
+    .pw-meter { display: flex; align-items: center; gap: 8px; font-size: 10px; color: #555; }
+    .pw-meter .bar { flex: 1; height: 6px; border: 1px solid #000; border-radius: 3px; overflow: hidden; background: #fff; }
+    .pw-meter .bar i { display: block; height: 100%; background: #888; }
+
+    /* DIVIDER */
+    .divider { display: flex; align-items: center; gap: 8px; font-size: 11px; color: #888; }
+    .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: #ccc; }
+
+    /* MODAL BOX */
+    .modal-box { border: 2px solid #000; border-radius: 6px; padding: 12px; background: #fff; display: flex; flex-direction: column; gap: 10px; }
+    .modal-title { font-size: 12px; font-weight: 700; border-bottom: 1px solid #ccc; padding-bottom: 6px; }
+    .modal-desc { font-size: 11px; color: #444; line-height: 1.5; }
+    .modal-actions { display: flex; gap: 8px; margin-top: 4px; }
+    .modal-actions .btn-secondary, .modal-actions .btn-primary { flex: 1; font-size: 11px; padding: 7px 8px; }
+
+    /* ICON PLACEHOLDER */
+    .icon-lg { text-align: center; font-size: 28px; margin-bottom: 4px; }
+
+    /* BACK NAV */
+    .back-nav { font-size: 12px; color: #000; display: flex; align-items: center; gap: 4px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; margin-bottom: 4px; }
+
+    /* CARD */
+    .wf-card { border: 1px solid #ccc; border-radius: 4px; padding: 10px 12px; display: flex; align-items: center; gap: 8px; }
+    .wf-card-body { flex: 1; }
+    .wf-card-title { font-size: 12px; font-weight: 700; }
+    .wf-card-sub { font-size: 11px; color: #555; }
+    .wf-card-action { flex-shrink: 0; }
+
+    /* CAPTCHA placeholder */
+    .captcha-box { border: 1px dashed #888; border-radius: 4px; padding: 8px; text-align: center; font-size: 10px; color: #888; background: #f8f8f8; }
+
+    /* FOOTER */
+    .wf-footer { margin-top: 36px; padding-top: 12px; border-top: 1px solid #ccc; font-size: 10px; color: #aaa; display: flex; justify-content: space-between; }
+
+    /* SCREEN DESCRIPTION TABLE */
+    .wf-desc-section { margin-top: 32px; }
+    .wf-desc-title { font-size: 14px; font-weight: 700; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 2px solid #000; }
+    .wf-desc-table { width: 100%; border-collapse: collapse; background: #fff; font-size: 12px; }
+    .wf-desc-table th, .wf-desc-table td { border: 1px solid #000; padding: 6px 8px; text-align: left; vertical-align: top; }
+    .wf-desc-table th { background: #f0f0f0; font-weight: 700; font-size: 11px; text-transform: uppercase; }
+    .wf-desc-table td:first-child, .wf-desc-table th:first-child { width: 36px; text-align: center; }
+    .wf-desc-table td:nth-child(2) { width: 150px; }
+    .wf-desc-table td:nth-child(3) { width: 110px; }
+    .wf-desc-table td:nth-child(4) { width: 90px; }
+    .wf-desc-screen-header td { background: #000; color: #fff; font-weight: 700; font-size: 12px; }
+  </style>
+</head>
+<body>
+<script>if (window.self !== window.top) document.documentElement.classList.add('in-iframe');</script>
+<div class="wf-breadcrumb"><a href="authentication-wireframe.html">← Mục lục wireframe (tất cả flow)</a></div>
+<div class="wf-page" data-device="mobile">
+
+  <div class="wf-header">
+    <div class="wf-feature-label">Feature: authentication / Wireframe</div>
+    <div class="wf-flow-title">Đăng nhập/đăng ký qua Google</div>
+    <div class="wf-flow-meta">1 màn hình · Device: mobile · Tạo: 2026-08-02 · Nguồn: srs/authentication-userflow.md + tài liệu nghiệp vụ</div>
+    <div class="wf-flow-desc">Flow này KHÔNG có màn riêng — dùng chung màn <code>login</code>, vào bằng nút "Đăng nhập với Google" (element #7). Callback thành công với email mới thì tạo tài khoản verified (FR-013); email trùng thì tự liên kết vào tài khoản có sẵn (FR-014); callback thất bại hoặc đóng tab giữa chừng thì báo E-authentication-008 và không tạo tài khoản dở dang.</div>
+  </div>
+
+  <div class="wf-rows">
+
+    <div class="wf-screen" id="s1">
+      <div class="wf-step-badge">1</div>
+      <div class="wf-device-tag">mobile · 375px</div>
+      <div class="wf-screen-frame">
+        <div class="wf-screen-bar">
+          <div class="wf-dot"></div><div class="wf-dot"></div><div class="wf-dot"></div>
+          <span class="wf-bar-title">Đăng nhập</span>
+        </div>
+        <div class="wf-screen-content">
+          <div class="wf-app-brand">english-ai-demo</div>
+          <div class="wf-screen-title">Đăng nhập tài khoản</div>
+          <div class="wf-form">
+            <div class="field">
+              <label>Email</label>
+              <input type="email" placeholder="ban@email.com">
+            </div>
+            <div class="field">
+              <label>Mật khẩu</label>
+              <div class="input-pw">
+                <input type="password" placeholder="••••••••">
+                <span class="eye">(hiện)</span>
+              </div>
+            </div>
+            <div class="links-row">
+              <label class="checkbox"><input type="checkbox"> Ghi nhớ đăng nhập</label>
+              <a class="wf-link">Quên mật khẩu?</a>
+            </div>
+            <div class="captcha-box">[ captcha — chỉ hiện sau 3 lần đăng nhập sai ]</div>
+            <button class="btn-primary">Đăng nhập</button>
+            <div class="divider"><span>hoặc</span></div>
+            <button class="btn-google"><span class="g-icon">G</span> Đăng nhập với Google</button>
+            <div class="links-row">
+              <span class="hint-text">Chưa có tài khoản?</span>
+              <a class="wf-link">Đăng ký</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="wf-screen-label">login<span class="wf-shared-badge">chung</span></div>
+    </div>
+
+  </div>
+
+  <div class="wf-desc-section">
+    <div class="wf-desc-title">Mô tả màn hình</div>
+    <table class="wf-desc-table">
+      <thead>
+        <tr><th>#</th><th>Items</th><th>Control type</th><th>Data type</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr class="wf-desc-screen-header"><td colspan="5">Screen 1: login — Đăng nhập tài khoản (màn dùng chung với flow login-email; nhánh Google là element #7)</td></tr>
+        <tr>
+          <td>1</td><td>Email</td><td>Textbox</td><td>Text</td>
+          <td>• <b>Mục đích</b>: định danh tài khoản đăng nhập (email là định danh duy nhất, BR-authentication-002).<br>• <b>Validation</b>: bắt buộc; kiểm định dạng email cơ bản. KHÔNG kiểm sự tồn tại của email tại đây (chống account enumeration, NFR-authentication-007).<br>• <b>States</b>: default rỗng + auto-focus khi tải; error viền đỏ nếu định dạng sai.<br>• <b>Placeholder</b> "ban@email.com".<br>• <b>Security</b>: không gợi ý/autocomplete làm lộ email đã đăng ký.</td>
+        </tr>
+        <tr>
+          <td>2</td><td>Mật khẩu</td><td>Textbox (password)</td><td>Text</td>
+          <td>• <b>Mục đích</b>: xác thực chủ tài khoản.<br>• <b>Validation</b>: bắt buộc. Login KHÔNG validate chính sách mật khẩu (8-20/hoa/thường/đặc biệt) — chỉ so khớp với mật khẩu đã lưu; policy chỉ áp ở signup/reset (FR-003).<br>• <b>States</b>: masked mặc định, nút "Hiện/Ẩn" toggle hiển thị.<br>• <b>Security</b>: mật khẩu không lưu plaintext, không ghi log (NFR-authentication-003).</td>
+        </tr>
+        <tr>
+          <td>3</td><td>Ghi nhớ đăng nhập</td><td>Checkbox</td><td>Check</td>
+          <td>• <b>Mục đích</b>: giữ phiên lâu cho người dùng đa thiết bị (FR-authentication-011, NFR-006).<br>• <b>Default OFF</b> (mặc định remember-me tắt).<br>• <b>Hệ quả</b>: tick → phiên giữ 30 ngày trên thiết bị đó; không tick → phiên phiên-làm-việc thường.</td>
+        </tr>
+        <tr>
+          <td>4</td><td>Quên mật khẩu?</td><td>Link</td><td>Click</td>
+          <td>• <b>Mục đích</b>: lối vào khôi phục mật khẩu.<br>• <b>Navigation</b>: sang màn <code>forgot-password</code>.</td>
+        </tr>
+        <tr>
+          <td>5</td><td>Captcha</td><td>Widget</td><td>ReadOnly</td>
+          <td>• <b>Mục đích</b>: chống dò mật khẩu bằng thử lặp (NFR-authentication-005).<br>• <b>Display rule</b>: chỉ hiện khi tài khoản có ≥3 lần đăng nhập sai liên tiếp (FR-025, BR-authentication-006).<br>• <b>Validation khi hiện</b>: bắt buộc pass captcha mới cho submit.<br>• <b>States</b>: ẩn (fail 0-2) / hiện (fail ≥3).</td>
+        </tr>
+        <tr>
+          <td>6</td><td>Đăng nhập</td><td>Button (Primary)</td><td>Click</td>
+          <td>• <b>Mục đích</b>: gửi thông tin đăng nhập, tạo phiên nếu hợp lệ (FR-authentication-008).<br>• <b>Validation</b>: disabled khi email/mật khẩu rỗng (và khi captcha hiện mà chưa pass).<br>• <b>States</b>: default / submitting ("Đang đăng nhập...", spinner, disabled) / error inline.<br>• <b>Navigation success</b>: tài khoản verified + không khóa + khớp → vào app (onboarding là feature riêng).<br>• <b>Error — sai thông tin</b>: <code>E-authentication-003</code> "Email hoặc mật khẩu không đúng" (thông báo chung, không lộ email nào tồn tại, FR-010); tăng bộ đếm sai +1.<br>• <b>Error — chưa xác nhận</b>: <code>E-authentication-004</code> "Tài khoản chưa được xác nhận." + nút [Gửi lại email xác nhận] (FR-009).<br>• <b>Error — bị khóa</b>: <code>E-authentication-005</code> "Tài khoản tạm khóa do nhiều lần đăng nhập sai. Vui lòng thử lại sau {X} giờ." khi ≥5 lần sai → khóa 24h tự mở (FR-026, BR-005).<br>• <b>Edge — lỗi mạng</b>: KHÔNG tăng bộ đếm sai (FR-authentication-027, BR-011); hiển thị lỗi tạm và cho thử lại.<br>• <b>Performance</b>: hiển thị kết quả (vào app hoặc lỗi) trong 3 giây ở 95% trường hợp (NFR-001).<br>• <b>Accessibility</b>: nút + field có nhãn cho trình đọc màn hình, điều hướng bàn phím (NFR-009).</td>
+        </tr>
+        <tr>
+          <td>7</td><td>Đăng nhập với Google</td><td>Button (Secondary)</td><td>Click</td>
+          <td>• <b>Mục đích</b>: đăng nhập/đăng ký một chạm qua Google, 1 luồng duy nhất không hỏi thêm field (FR-authentication-012).<br>• <b>Navigation success — email mới</b>: tạo tài khoản mới ở trạng thái <code>verified</code> (Google đã xác thực email, FR-013, BR-009) → vào app.<br>• <b>Navigation success — email trùng</b>: tự liên kết Google vào tài khoản đã có, không tạo trùng, không hỏi mật khẩu cũ (FR-014, BR-003) → vào app.<br>• <b>Error</b>: <code>E-authentication-008</code> "Đăng nhập Google thất bại. Vui lòng thử lại." khi callback lỗi/mạng/người dùng hủy — không tạo tài khoản dở dang (FR-015).<br>• <b>Edge</b>: đóng tab consent giữa chừng = coi như thất bại; email Google khác hoàn toàn email cũ → tạo tài khoản riêng (không liên kết).</td>
+        </tr>
+        <tr>
+          <td>8</td><td>Đăng ký</td><td>Link</td><td>Click</td>
+          <td>• <b>Mục đích</b>: lối vào tạo tài khoản mới.<br>• <b>Navigation</b>: sang màn <code>signup</code>.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="wf-footer">
+    <span>authentication / google-oauth</span>
+    <span>Tạo bởi /wireframe-html · 2026-08-02</span>
+  </div>
+
+</div>
+</body>
+</html>
